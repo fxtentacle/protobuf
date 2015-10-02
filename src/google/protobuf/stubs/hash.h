@@ -41,10 +41,10 @@
 #define GOOGLE_PROTOBUF_HAVE_HASH_MAP 1
 #define GOOGLE_PROTOBUF_HAVE_HASH_SET 1
 
-// Use C++11 unordered_{map|set} if available. Otherwise, libc++ always support
-// unordered_{map|set}
-#if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X) || \
-    defined(_LIBCPP_VERSION)
+// Use C++11 unordered_{map|set} if available.
+#if ((_LIBCPP_STD_VER >= 11) || \
+     (((__cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X)) && \
+      (__GLIBCXX__ > 20090421)))
 # define GOOGLE_PROTOBUF_HAS_CXX11_HASH
 
 // For XCode >= 4.6:  the compiler is clang with libc++.
@@ -103,8 +103,8 @@
 #  define GOOGLE_PROTOBUF_HAS_CXX11_HASH
 #  define GOOGLE_PROTOBUF_HASH_COMPARE std::hash_compare
 # elif _MSC_VER >= 1500  // Since Visual Studio 2008
-#  define GOOGLE_PROTOBUF_HAS_TR1
-#  define GOOGLE_PROTOBUF_HASH_COMPARE stdext::hash_compare
+#  undef GOOGLE_PROTOBUF_HAVE_HASH_MAP
+#  undef GOOGLE_PROTOBUF_HAVE_HASH_SET
 # elif _MSC_VER >= 1310
 #  define GOOGLE_PROTOBUF_HASH_NAMESPACE stdext
 #  include <hash_map>
@@ -142,6 +142,11 @@
 # include <tr1/unordered_set>
 # define GOOGLE_PROTOBUF_HASH_SET_CLASS unordered_set
 #endif
+
+# define GOOGLE_PROTOBUF_HASH_NAMESPACE_DECLARATION_START \
+  namespace google {                                      \
+  namespace protobuf {
+# define GOOGLE_PROTOBUF_HASH_NAMESPACE_DECLARATION_END }}
 
 #undef GOOGLE_PROTOBUF_HAS_CXX11_HASH
 #undef GOOGLE_PROTOBUF_HAS_TR1
