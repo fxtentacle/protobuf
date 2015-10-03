@@ -254,7 +254,7 @@ if(INSTALL_PYTHON)
     )
     add_custom_target(python_protobuf ALL DEPENDS python/google)
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python/google
-        DESTINATION lib/python3.4/dist-packages
+        DESTINATION lib/python3.4/site-packages
         COMPONENT protobuf_lib
     )
 endif()
